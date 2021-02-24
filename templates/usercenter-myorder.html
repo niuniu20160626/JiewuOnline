@@ -1,0 +1,158 @@
+{% extends 'usercenter-base.html' %}
+{% block title %}我的订单页 - 地下蛇街舞培训网{% endblock %}
+{% load static %}
+{% block custom_bread %}
+<section xmlns="http://www.w3.org/1999/html">
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'users:info' %}">个人中心</a>></li>
+                <li>我的订单</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block right_form %}
+<div class="right" >
+		<div class="personal_des Releasecont">
+			<div class="head">
+				<h1>我的订单</h1>
+			</div>
+		</div>
+		<div class="personal_des permessage">
+			<div class="head">
+				<ul class="tab_header messagehead">
+					<li class="active"><a href="{% url 'users:myorder' %}">课程订单</a> </li>
+				</ul>
+			</div>
+			<div class="messagelist">
+                    <div class="messages">
+                        {% for order in orders.object_list %}
+                        <div class="fr">
+                            <div class="top">
+                                <span ><font color="black">订单编号:{{ order.id }}</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">订单价格:{{ order.price }}元</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">课程名称:{{ order.course.name }}</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">用户名称:{{ order.user.username }}</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">支付方式:{% if order.istype == 1 %}支付宝支付{% endif %}{% if order.istype == 2 %}微信支付{% endif %}</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">创建时间:{{ order.add_time }}</font></span>
+                                <span class="delete-group fr jsDeleteUser_order" data-orderid="{{ order.id }}"><img src="{% static 'img/delete.png' %}"></span>
+                            </div>
+                            ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                        </div>
+                        {% endfor %}
+                    </div>
+			</div>
+			<div class="pageturn pagerright">
+                <ul class="pagelist">
+                {% if orders.has_previous %}
+                    <li class="long"><a href="?{{ orders.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in orders.pages %}
+                    {% if page %}
+                        {% ifequal page orders.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none">...</li>
+                    {% endif %}
+                {% endfor %}
+                {% if orders.has_next %}
+                    <li class="long"><a href="?{{ messages.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+            </ul>
+            </div>
+		</div>
+		<div class="personal_des permessage">
+			<div class="head">
+				<ul class="tab_header messagehead">
+					<li class="active"><a href="{% url 'users:myorder' %}">课卡订单</a> </li>
+				</ul>
+			</div>
+			<div class="messagelist">
+                    <div class="messages">
+                        {% for order in cardorders.object_list %}
+                        <div class="fr">
+                            <div class="top">
+                                <span ><font color="black">订单编号:{{ order.id }}</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">订单价格:{{ order.price }}元</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">课卡名称:{{ order.coursecard.name }}</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">用户名称:{{ order.user.username }}</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">支付方式:{% if order.istype == 1 %}支付宝支付{% endif %}{% if order.istype == 2 %}微信支付{% endif %}</font></span>&nbsp;&nbsp;&nbsp;
+                                <span ><font color="black">创建时间:{{ order.add_time }}</font></span>
+                                <span class="delete-group fr jsDeleteUser_cardorder" data-cardorderid="{{ order.id }}"><img src="{% static 'img/delete.png' %}"></span>
+                            </div>
+                            ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                        </div>
+                        {% endfor %}
+                    </div>
+			</div>
+			<div class="pageturn pagerright">
+                <ul class="pagelist">
+                {% if cardorders.has_previous %}
+                    <li class="long"><a href="?{{ cardorders.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in cardorders.pages %}
+                    {% if page %}
+                        {% ifequal page cardorders.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none">...</li>
+                    {% endif %}
+                {% endfor %}
+                {% if cardorders.has_next %}
+                    <li class="long"><a href="?{{ messages.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+            </ul>
+            </div>
+		</div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script type="text/javascript">
+    $('.jsDeleteUser_order').on('click', function () {
+            var _this = $(this),
+                orderid = _this.attr('data-orderid');
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{% url 'users:myorder' %}",
+                data: {
+                    order_id: orderid,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
+
+     $('.jsDeleteUser_cardorder').on('click', function () {
+            var _this = $(this),
+                cardorderid = _this.attr('data-cardorderid');
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{% url 'users:myorder' %}",
+                data: {
+                    cardorder_id: cardorderid,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
+</script>
+{% endblock %}

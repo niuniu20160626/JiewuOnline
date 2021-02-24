@@ -1,0 +1,12 @@
+{% extends 'org_base.html' %}
+{% block title %}分店介绍{% endblock %}
+{% block right_form %}
+<div class="right companycenter layout" >
+        <div class="head">
+            <h1>旗下分店介绍</h1>
+        </div>
+        <div class="des">
+             {% autoescape off %} {{ course_org.desc }} {% endautoescape %}
+        </div>
+</div>
+{% endblock %}

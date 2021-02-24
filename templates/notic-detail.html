@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}关于我们页 - 地下蛇街舞培训网{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li>公告详情</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+<section>
+<div class="wp" >
+    <p><span class="key" title="{{ notic.title }}">公告标题：{{ notic.title }}</span></p>
+    <br>
+    <p><span class="key">发布时间: {{ notic.add_time }}</span></p>
+    <br>
+    <p><span class="key">公告内容:</span></p>
+    <br>
+    <div class="des">{% autoescape off %} {{ notic.desc }} {% endautoescape %}</div>
+</div><br>
+</section>
+{% endblock %}
+
+

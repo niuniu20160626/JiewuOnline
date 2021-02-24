@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}购买订单页 - 地下蛇街舞培训网{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+				<li><a href="{% url 'course:list' %}">街舞课程</a>></li>
+                <li><a href="{% url 'course:detail' buy_course.id %}">课程详情</a>></li>
+                <li>订单界面</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/course_buy.css' %}">
+{% endblock %}
+{% block content %}
+<div class="main">
+        <div class="wrapper" align="center">
+            <table class="table">
+            <thead>
+                <tr>
+                    <th>课程名称</th>
+                    <th>用户名称</th>
+                    <th>价格(元)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td align="center">
+                        <a href="{% url 'course:detail' buy_course.id %}">
+                            <img width="150" height="80" src="{{ buy_course.image.url }}" alt=""><br>
+                            <span class="title">{{ buy_course.name }}</span>
+                        </a>
+                    </td>
+                    <td><a href="{% url 'users:info' %}" ><span class="title">{{ request.user.username }}</span></a></td>
+                    <td>{{ buy_course.price }}</td>
+                </tr>
+            </tbody>
+        </table>
+            <form action="https://pay.bearsoftware.net.cn/" method="post" id="pay-form">
+                <input type="hidden" name="uid" value="54212bb69c633f47717975b5">
+                <input type="hidden" name="price" value="{{ buy_course.price }}">
+                <input type="hidden" name="notify_url" value="http://{{ host }}{% url 'course:detail' buy_course.id %}">
+                <input type="hidden" name="return_url" value="http://{{ host }}{% url 'course:detail' buy_course.id %}">
+                <input type="hidden" name="orderid" value="{{ userorder.id }}">
+                <input type="hidden" name="orderuid" value="{{ request.user.id }}">
+                <input type="hidden" name="goodsname" value="{{ buy_course.name }}">
+                <input type="hidden" name="key" id="key" value="">
+                <br>
+            <div class="pay-way">
+                <!-- 2是微信支付 -->
+                <label for="istype-wx">
+                    <input id="istype-wx" type="radio" name="istype" value="2">
+                    <span class="wx-btn">
+                        <img src="http://nos.netease.com/test-edu-image/1BD9F69D6760CE1508D2269864AA54F8.png" alt="">
+                    </span>
+                </label>
+                &nbsp;&nbsp;&nbsp;
+                <!-- 1是支付宝支付 -->
+                <label for="istype-zfb">
+                    <input id="istype-zfb" type="radio" name="istype" value="1" checked>
+                    <span class="zfb-btn"></span>
+                </label>
+                <div style="clear: both;"></div>
+            </div>
+                <div class="submit-group">
+                    <label id="submit-btn" class="submit-btn">去支付</label>
+            </div>
+                {% csrf_token %}
+        </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+<script type="text/javascript">
+$('#submit-btn').on('click', function () {
+            var goodsname = $("input[name='goodsname']").val();
+            var istype = $("input[name='istype']:checked").val();
+            var notify_url = $("input[name='notify_url']").val();
+            var orderid = $("input[name='orderid']").val();
+            var price = $("input[name='price']").val();
+            var return_url = $("input[name='return_url']").val();
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{% url 'course:buy' buy_course.id %}",
+                data: {
+                    'goodsname': goodsname,
+                    'istype': istype,
+                    'notify_url': notify_url,
+                     'orderid': orderid,
+                     'price': price,
+                     'return_url': return_url,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                async: true,
+                success: function (data) {
+                      var key = data.key;
+                      var keyInput = $('#key');
+                      keyInput.val(key);
+                      $("#pay-form").submit();
+                }
+            });
+        });
+</script>
+{% endblock %}
+

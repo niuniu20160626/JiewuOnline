@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}课卡售卖页 - 地下蛇街舞培训网{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li>课卡售卖</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+<section>
+	<div class="wp">
+		<div class="list" style="margin-top:0;">
+			<div class="leftk layout">
+                <div class="listoptions">
+			<ul>
+				<li>
+					<h2>课卡类型</h2>
+					<div class="cont">
+                        <a href="?kk="><span class="{% ifequal c_type '' %}active2{% endifequal %}">全部</span></a>
+                            <a href="?kk=ck"><span class="{% ifequal c_type 'ck' %}active2{% endifequal %}">次卡</span></a>
+                            <a href="?kk=tk"><span class="{% ifequal c_type 'tk' %}active2{% endifequal %}">通卡</span></a>
+                            <a href="?kk=sk"><span class="{% ifequal c_type 'sk' %}active2{% endifequal %}">一对一课卡</span></a>
+					</div>
+				</li>
+			</ul>
+		</div>
+                <div><br><br></div>
+                <div class="fr">共<span class="key">{{ coursecard_num }}</span>个课卡</div>
+                <div><br><br></div>
+                <div id="inWindow">
+                    <div class="tab_cont " id="content">
+					<div class="group_list">
+                            {% for coursecard in all_coursecards.object_list %}
+                            <div class="box">
+                                <a href="{% url 'org:c_desc' coursecard.id %}">
+                                    <img width="280" height="350" class="scrollLoading" src="{{ MEDIA_URL }}{{ coursecard.image }}"/>
+                                </a>
+                                <div class="des">
+                                    <a href="{% url 'org:c_desc' coursecard.id %}">
+                                        <h2>{{ coursecard.name }}</h2>
+                                    </a>
+                                    <span class="fl">次数：{{ coursecard.nums }}次</i></span>
+                                    <span class="fr">价格：{{ coursecard.price }}&nbsp;元&nbsp;</span>
+                                </div>
+                                <div class="bottom">
+                                    <a href="{% url 'org:c_desc' coursecard.id %}"><span class="">{{ coursecard.desc }}</span></a>
+                                </div>
+                            </div>
+                            {% endfor %}
+					</div>
+                        <div class="pageturn">
+            <ul class="pagelist">
+                  {% if all_coursecards.has_previous %}
+                    <li class="long"><a href="?{{ all_coursecards.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in all_coursecards.pages %}
+                    {% if page %}
+                        {% ifequal page all_coursecards.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none">...</li>
+                    {% endif %}
+                {% endfor %}
+                {% if all_coursecards.has_next %}
+                    <li class="long"><a href="?{{ all_coursecards.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+            </ul>
+        </div>
+				</div>
+                </div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+

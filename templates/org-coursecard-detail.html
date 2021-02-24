@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}课卡售卖页 - 地下蛇街舞培训网{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'org:coursecard' %}">课卡售卖</a>></li>
+                <li>课卡详情</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+<section>
+	<div class="wp">
+		<div class="groupPurchase_detail detail">
+			<div class="toppro">
+				<div class="left">
+					<div class="picbox">
+						<div class="tb-booth tb-pic">
+							<img width="440" height="445" src="{{ MEDIA_URL }}{{ coursecard.image }}" class="jqzoom" />
+						</div>
+					</div>
+					<div class="des">
+						<h1 title="{{ coursecard.name }}">{{ coursecard.name }}</h1>
+						<span class="key">{{ coursecard.desc }}</span>
+						<div class="prize">
+							<span class="fl">课卡类型：<i class="key">{{ coursecard.get_card_type_display }}</i></span>
+                            <span class="fr">价格：<i class="key">{{ coursecard.price }} 元</i></span>
+						</div>
+						<ul class="parameter">
+							<li><span class="pram word3">次数：</span><span>{{ coursecard.nums }}次</span></li>
+							<li><span class="pram word3">添加时间：</span><span>{{ coursecard.add_time }}</span></li>
+						</ul>
+						{% if buy_tip %}
+						<div class="prize">
+							<span><i class="key">{{ buy_tip }}</i></span>
+						</div>
+						{% endif %}
+						<br><br>
+						<div class="btns">
+							     <div class="buy btn">
+									<a style="color: white" href="{% url 'org:buy_card' coursecard.id %}">购买课卡</a>
+								 </div>
+                        </div>
+					</div>
+                    <div class="group-share-box">
+                        <div class="bdsharebuttonbox"
+                             data-text="{{ coursecard.name }}"
+                             data-desc="我在#地下蛇街舞培训网#发现了"
+                             data-comment=""
+                             data-url="/group/groupdetail/15/">
+                            <span class="fl"></span>
+                            <a href="#" class="bds_more" data-cmd="more"></a>
+                            <a title="分享到QQ空间" href="#" class="bds_qzone" data-cmd="qzone"></a>
+                            <a title="分享到新浪微博" href="#" class="bds_tsina" data-cmd="tsina"></a>
+                            <a title="分享到腾讯微博" href="#" class="bds_tqq" data-cmd="tqq"></a>
+                            <a title="分享到人人网" href="#" class="bds_renren" data-cmd="renren"></a>
+                            <a title="分享到微信" href="#" class="bds_weixin" data-cmd="weixin"></a>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <br>
+</section>
+{% endblock %}
+
+

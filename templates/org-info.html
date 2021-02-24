@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}关于我们页 - 地下蛇街舞培训网{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li>关于我们</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+<section>
+<div class="left" >
+        <div class="des">{% autoescape off %} {{ org.desc }} {% endautoescape %}</div>
+</div>
+<br>
+<br>
+<div class="wp butler_list_box list">
+	<div class='left'>
+		<div class="butler_list company list">
+		<div class="layout">
+			<div class="head">
+				<ul class="tab_header">
+					<li class="active"><a href="{% url 'org:list' %}">旗下分店</a> </li>
+				</ul>
+			</div>
+             {% for org in all_orgs %}
+                <dl class="des difdes">
+                    <dt>
+                        <a href="{% url 'org:home' org.id %}">
+                            <img width="200" height="120" class="scrollLoading" data-url="{{ MEDIA_URL }}{{ org.image }}"/>
+                        </a>
+                    </dt>
+                    <dd>
+                        <div class="clearfix">
+                             <a href="{% url 'org:home' org.id %}">
+                                 <h1>{{ org.name }}</h1>
+                                 <div class="pic fl">
+                                     {% if org.is_auth %}
+                                         <img src="{% static 'images/authentication.png' %}"/>
+                                     {% endif %}
+                                     {% if org.is_gold %}
+                                        <img src="{% static 'images/gold.png' %}"/>
+                                     {% endif %}
+                                 </div>
+                             </a>
+                        </div>
+                        <ul class="cont">
+                            <li class="first"><p class="pic9"><span>{{ org.course_nums }}</span></p><p class="c7"><span>{{ org.students }}</span></p></li>
+                            <li class="c8" style="padding-left:18px;">{{ org.address }}</li>
+                            <li class="pic10" style="padding-left:18px;">经典课程：
+                                {% if org.courses %}
+                                {% for course in org.courses %}
+                                    <a href="{% url 'course:detail' course.id %}">{{ course.name }}</a>
+                                {% endfor %}
+                                {% else %}
+                                     无
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+             {% endfor %}
+		</div></div></div>
+</div>
+</section>
+{% endblock %}
+
+

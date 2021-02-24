@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}街舞课程列表页 - 地下蛇街舞培训网{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li>街舞课程</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block content %}
+<section>
+	<div class="wp">
+		<div class="list" style="margin-top:0;">
+			<div class="left layout">
+                <div class="listoptions">
+			<ul>
+				<li>
+					<h2>课程难度</h2>
+					<div class="cont">
+                        <a href="?age={{ age_id }}&cg={{ category }}"><span class="{% ifequal degree '' %}active2{% endifequal %}">全部</span></a>
+                            <a href="?de=cj&age={{ age_id }}&cg={{ category }}"><span class="{% ifequal degree 'cj' %}active2{% endifequal %}">初级</span></a>
+                            <a href="?de=zj&age={{ age_id }}&cg={{ category }}"><span class="{% ifequal degree 'zj' %}active2{% endifequal %}">中级</span></a>
+                            <a href="?de=gj&age={{ age_id }}&cg={{ category }}"><span class="{% ifequal degree 'gj' %}active2{% endifequal %}">高级</span></a>
+					</div>
+				</li>
+                <li>
+					<h2>年龄段</h2>
+                    <div class="cont">
+                        <a href="?de={{ degree }}&cg={{ category }}"><span class="{% ifequal age_id '' %}active2{% endifequal %}">全部</span></a>
+                            {% for age in all_ages %}
+                                <a href="?age={{ age.id }}&de={{ degree }}&cg={{ category }}"><span class="{% ifequal age_id age.id|stringformat:'i' %}active2{% endifequal %}">{{ age.age }}</span></a>
+                             {% endfor %}
+					</div>
+				</li>
+				<li>
+                    <h2>舞的种类</h2>
+					<div class="more">更多</div>
+					<div class="cont">
+                        <a href="?age={{ age_id }}&de={{ degree }}"><span class="{% ifequal category '' %}active2{% endifequal %}">全部</span></a>
+                            <a href="?de={{ degree }}&age={{ age_id }}&cg=ds"><span class="{% ifequal category 'ds' %}active2{% endifequal %}">URBAN DANCE</span></a>
+                            <a href="?de={{ degree }}&age={{ age_id }}&cg=js"><span class="{% ifequal category 'js' %}active2{% endifequal %}">JAZZ</span></a>
+                            <a href="?de={{ degree }}&age={{ age_id }}&cg=zy"><span class="{% ifequal category 'zy' %}active2{% endifequal %}">HIPHOP</span></a>
+                            <a href="?de={{ degree }}&age={{ age_id }}&cg=jx"><span class="{% ifequal category 'jx' %}active2{% endifequal %}">POPPING</span></a>
+					</div>
+				</li>
+			</ul>
+		</div>
+                <div><br><br></div>
+                <div class="fr">共<span class="key">{{ course_num }}</span>个课程</div>
+                <div><br><br></div>
+				<div class="head">
+					<ul class="tab_header">
+						<li class="{% if sort == '' %}active{% endif %}"><a href="?sort=">最新 </a></li>
+						<li class="{% if sort == 'hot' %}active{% endif %}"><a href="?sort=hot">最热门</a></li>
+						<li class="{% if sort == 'students' %}active{% endif %}"><a href="?sort=students">参与人数</a></li>
+					</ul>
+				</div>
+                <div id="inWindow">
+                    <div class="tab_cont " id="content">
+					<div class="group_list">
+                            {% for course in all_courses.object_list %}
+                            <div class="box">
+                                <a href="{% url 'course:detail' course.id %}">
+                                    <img width="280" height="350" class="scrollLoading" src="{{ MEDIA_URL }}{{ course.image }}"/>
+                                </a>
+                                <div class="des">
+                                    <a href="{% url 'course:detail' course.id %}">
+                                        <h2>{{ course.name }}</h2>
+                                    </a>
+                                    <span class="fl">时长：<i class="key">{{ course.learn_times }}分</i></span>
+                                    <span class="fr">价格：{{ course.price }}&nbsp;元&nbsp;</span>
+                                </div>
+                                <div class="bottom">
+                                    <a href="{% url 'course:detail' course.id %}"><span class="fl">来自{{ course.course_org.name }}</span></a>
+                                    <span class="star fr  notlogin
+                                        " data-favid="15">
+                                        {{ course.fav_nums }}
+                                    </span>
+                                </div>
+                            </div>
+                            {% endfor %}
+					</div>
+                        <div class="pageturn">
+            <ul class="pagelist">
+                  {% if all_courses.has_previous %}
+                    <li class="long"><a href="?{{ all_courses.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in all_courses.pages %}
+                    {% if page %}
+                        {% ifequal page all_courses.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none">...</li>
+                    {% endif %}
+                {% endfor %}
+                {% if all_courses.has_next %}
+                    <li class="long"><a href="?{{ all_courses.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+            </ul>
+        </div>
+				</div>
+                </div>
+			</div>
+			<div class="right layout">
+				<div class="head">热门街舞课程推荐</div>
+				<div class="group_recommend">
+                {% for course in hot_courses %}
+                    <dl>
+						<dt>
+							<a target="_blank" href="{% url 'course:detail' course.id %}">
+								<img width="240" height="220" class="scrollLoading" src="{{ MEDIA_URL }}{{ course.image }}"/>
+							</a>
+						</dt>
+						<dd>
+							<a target="_blank" href="{% url 'course:detail' course.id %}"><h2> {{ course.name }}</h2></a>
+							<span class="fl">难度：<i class="key">{{ course.get_degree_display }}</i></span>
+						</dd>
+					</dl>
+                 {% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

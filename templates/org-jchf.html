@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}精彩回放页 - 地下蛇街舞培训网{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li>精彩回放</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block custom_css %}
+{% endblock %}
+{% block content %}
+<section>
+	<div class="wp">
+		<div class="list" style="margin-top:0;">
+                <div id="inWindow">
+                    <div class="tab_cont " id="content">
+					<div class="group_list">
+                            {% for jchf in all_jchfs.object_list %}
+                            <div class="box">
+                                <a href="{% url 'org:orgjchfplay' jchf.id %}">
+                                    <img width="280" height="350" class="scrollLoading" src="{{ MEDIA_URL }}{{ jchf.image }}"/>
+                                </a>
+                                <div class="des">
+                                     <a href="{% url 'org:orgjchfplay' jchf.id %}">
+                                    <h2>{{ jchf.title }}</h2>
+                                     </a>
+                                    <span class="fl">描述：{{ jchf.desc }}</span>
+                                </div>
+                                <div class="bottom">
+                                    <a href="{% url 'org:orgjchfplay' jchf.id %}">
+                                    <span class="">观看次数-{{ jchf.click_nums }}-次</span>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+					</div>
+                        <div class="pageturn">
+            <ul class="pagelist">
+                  {% if all_jchfs.has_previous %}
+                    <li class="long"><a href="?{{ all_jchfs.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in all_jchfs.pages %}
+                    {% if page %}
+                        {% ifequal page all_jchfs.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none">...</li>
+                    {% endif %}
+                {% endfor %}
+                {% if all_jchfs.has_next %}
+                    <li class="long"><a href="?{{ all_jchfs.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+            </ul>
+        </div>
+				</div>
+                </div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+{% block custom_js %}
+{% endblock %}
+
