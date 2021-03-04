@@ -25,6 +25,7 @@ CourseResource 课程资源
 3.每个字段的类型，是否必要填写
 课程的评论也是一对多的情况
 用户对课程进行收藏
+
 '''
 
 class AgeLay(BaseModel):
@@ -37,7 +38,6 @@ class AgeLay(BaseModel):
 
     def __str__(self):
         return self.age
-
 
 class Course(BaseModel):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name="老师")
